@@ -69,7 +69,7 @@ echo "Waiting for CatalogSource (32 seconds)"
 sleep 32
 
 #
-# Create the Installation
+# Create the Installation of the Platform Navigator
 #
 cat << EOF | oc apply -f -
 apiVersion: integration.ibm.com/v1beta1
@@ -83,4 +83,26 @@ spec:
   mqDashboard: true
   replicas: 3
   version: 2020.2.1
+EOF
+
+#
+# Create the Installation of the Asset Repo for Sandpit
+# For Prod instance remove the replicas 1
+#
+cat << EOF | oc apply -f -
+apiVersion: integration.ibm.com/v1beta1
+kind: AssetRepository
+spec:
+  license:
+    accept: true
+  replicas: 1
+  storage:
+    assetDataVolume:
+      class: $CP4I_FILE_GID_STORAGECLASS
+    couchVolume:
+      class: $CP4I_BLOCK_STORAGECLASS
+  version: 2020.2.1.1-0
+metadata:
+  name: asset-repo
+  namespace: $CP_NAMESPACE
 EOF
