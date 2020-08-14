@@ -6,7 +6,22 @@
 
 
 #installation.orchestrator.management.ibm.com/ibm-management
-oc patch installation.orchestrator.management.ibm.com ibm-management --type=json -n cp4m -p '{"spec":{"pakModules":[{"config":{"name":"infrastructureManagement, "enabled": "true"}}]}}'
+#oc patch installation.orchestrator.management.ibm.com ibm-management --type=json -n cp4m -p '{"spec":{"pakModules":[{"enabled": "true","name":"infrastructureManagement}]}}'
+
+
+
+oc patch installation.orchestrator.management.ibm.com ibm-management -n cp4m --type=json -p='[
+ {"op": "test",
+  "path": "/spec/pakModules/0/name",
+  "value": "infrastructureManagement" },
+ {"op": "replace",
+  "path": "/spec/pakModules/0/enabled",
+  "value": true }
+]'
+ 
+
+
+
 cat << EOF | oc patch installation.orchestrator.management.ibm.com ibm-management --type=json -n cp4m -p=
 "spec": {
         "pakModules": [
