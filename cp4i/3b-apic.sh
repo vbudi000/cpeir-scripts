@@ -6,7 +6,7 @@
 
 if [ -z ${ENTITLED_REGISTRY_KEY} ]; then echo "You must export the ENTITLED_REGISTRY_KEY environment variable prior to running."; exit; fi
 ENTITLED_REGISTRY="cp.icr.io"
-ENTITLED_REGISTRY_SECRET="ibm-management-pull-secret"
+ENTITLED_REGISTRY_SECRET="ibm-entitlement-key"
 DOCKER_EMAIL="myemail@ibm.com"
 CP_NAMESPACE="cp4i"
 CP4I_BLOCK_STORAGECLASS="ibmc-block-gold"
