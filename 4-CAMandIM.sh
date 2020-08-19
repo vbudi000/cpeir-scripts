@@ -5,13 +5,13 @@
 source 0-setup_env.sh
 
 # CP4MCM_CAM_STORAGECLASS="ibmc-file-gold"
-CP4MCM_CAM_STORAGECLASS="ocs-storagecluster-cephfs"
+#CP4MCM_CAM_STORAGECLASS="ocs-storagecluster-cephfs"
 
 #
 # Create management-infrastructure-management namespace.
 #
 echo "Create management-infrastructure-management namespace."
-#oc new-project management-infrastructure-management
+oc new-project management-infrastructure-management
 
 #
 # Create CAM Service ID API Key
