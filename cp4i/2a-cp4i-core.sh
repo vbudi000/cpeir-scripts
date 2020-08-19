@@ -9,9 +9,9 @@ ENTITLED_REGISTRY="cp.icr.io"
 ENTITLED_REGISTRY_SECRET="ibm-management-pull-secret"
 DOCKER_EMAIL="myemail@ibm.com"
 CP_NAMESPACE="cp4i"
-CP4I_BLOCK_STORAGECLASS="ibmc-block-gold"
-CP4I_FILE_STORAGECLASS="ibmc-file-gold"
-CP4I_FILE_GID_STORAGECLASS="ibmc-file-gold-gid"
+CP4I_BLOCK_STORAGECLASS="ocs-storagecluster-ceph-rbd"
+CP4I_FILE_STORAGECLASS="ocs-storagecluster-cephfs"
+CP4I_FILE_GID_STORAGECLASS="ocs-storagecluster-cephfs"
 
 #
 # Create Operator Namespace
@@ -66,7 +66,7 @@ EOF
 # Wait for CatalogSource to be created
 #
 echo "Waiting for CatalogSource (32 seconds)"
-sleep 32
+sleep 132
 
 #
 # Create the Installation of the Platform Navigator

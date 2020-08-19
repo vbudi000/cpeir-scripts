@@ -1,19 +1,26 @@
 #!/bin/bash
+
+source 0-setup_env.sh
+
 YOUR_CLIENT_ID=`echo There is a huge white elephant in LA zoo | base64`
 YOUR_CLIENT_SECRET=`echo 12345678901234567890123456789012345 | base64`
-
 YOUR_CP4MCM_ROUTE=`oc -n ibm-common-services get route cp-console --template '{{.spec.host}}'`
-YOUR_IM_HTTPD_ROUTE=`echo cp-console.apps.mcmhub.ncolon.xyz |sed s/cp-console/inframgmtinstall/`
-
+YOUR_IM_HTTPD_ROUTE=`echo $YOUR_CP4MCM_ROUTE |sed s/cp-console/inframgmtinstall/`
+CP_PASSWORD=`oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d`
 
 echo YOUR_CLIENT_ID = $YOUR_CLIENT_ID
 echo YOUR_CLIENT_SECRET = $YOUR_CLIENT_SECRET
 echo YOUR_CP4MCM_ROUTE = $YOUR_CP4MCM_ROUTE
 echo YOUR_IM_HTTPD_ROUTE = $YOUR_IM_HTTPD_ROUTE
+echo CP_PASSWORD = $CP_PASSWORD
+echo ENTITLED_REGISTRY_SECRET = $ENTITLED_REGISTRY_SECRET
 
-#oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d
-#cloudctl login -a cp-console.apps.mcmhub.ncolon.xyz --skip-ssl-validation -u admin -p aoz72x0TAD2c5X2G7QBRRytTjdbFoArh
+cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default
 
+#
+# Register IAM OAUTH client
+#
+echo "Registering IAM OAUTH client."
 cat << EOF > registration.json
 {
     "token_endpoint_auth_method": "client_secret_basic",
@@ -46,16 +53,13 @@ cat << EOF > registration.json
     "redirect_uris": ["https://$YOUR_CP4MCM_ROUTE/auth/liberty/callback", "https://$YOUR_IM_HTTPD_ROUTE/oidc_login/redirect_uri"]
 }
 EOF
+cloudctl iam oauth-client-register -f registration.json
 
-CP_PASSWORD=`oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d`
-
-echo CP_PASSWORD = $CP_PASSWORD
-
-cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default
-
-#cloudctl iam oauth-client-register -f registration.json
-
-cat << EOF > im-oidc-secret.yaml
+#
+# Create imconnectionsecret
+#
+echo "Creating imconnectionsecret."
+oc create -f - <<EOF
 kind: Secret                                                                                                     
 apiVersion: v1                                                                                                   
 metadata:                                                                                                        
@@ -124,4 +128,61 @@ stringData:
     RequestHeader set X_REMOTE_USER_DOMAIN    %{OIDC_CLAIM_DOMAIN}e             env=OIDC_CLAIM_DOMAIN
 EOF
 
-oc create -n management-infrastructure-management -f im-oidc-secret.yaml
+
+#
+# Create IMInstall
+#
+echo "Creating CloudForms IMInstall"
+oc create -f - <<EOF
+apiVersion: infra.management.ibm.com/v1alpha1
+kind: IMInstall
+metadata:
+  labels:
+    app.kubernetes.io/instance: ibm-infra-management-install-operator
+    app.kubernetes.io/managed-by: ibm-infra-management-install-operator
+    app.kubernetes.io/name: ibm-infra-management-install-operator
+  name: im-iminstall
+  namespace: management-infrastructure-management
+spec:
+  applicationDomain: $YOUR_IM_HTTPD_ROUTE
+  imagePullSecret: $ENTITLED_REGISTRY_SECRET
+  httpdAuthenticationType: openid-connect
+  httpdAuthConfig: imconnectionsecret
+  enableSSO: true
+  initialAdminGroupName: operations
+  license:
+    accept: true
+  orchestratorInitialDelay: '2400'
+EOF
+
+#
+# Wait for IM
+#
+echo "Sleeping for 30 seconds."
+sleep 30
+echo "Creating IM Connection Resource"
+
+#
+# Create Connection
+#
+oc create -f - <<EOF
+ apiVersion: infra.management.ibm.com/v1alpha1
+ kind: Connection
+ metadata:
+   annotations:
+     BypassAuth: "true"
+   labels:
+    controller-tools.k8s.io: "1.0"
+   name: imconnection
+   namespace: "management-infrastructure-management"
+ spec:
+   cfHost: web-service.management-infrastructure-management.svc.cluster.local:3000
+EOF
+
+
+#
+# Create links in the UI
+#
+echo "Applying navigation UI updates."
+./automation-navigation-updates.sh -p
+

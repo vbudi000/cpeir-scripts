@@ -1,11 +1,15 @@
 #!/bin/bash
 
-if [ -z ${ENTITLED_REGISTRY_KEY} ]; then echo "You must export the ENTITLED_REGISTRY_KEY environment variable prior to running."; exit; fi
-ENTITLED_REGISTRY="cp.icr.io"
-ENTITLED_REGISTRY_SECRET="ibm-management-pull-secret"
-DOCKER_EMAIL="myemail@ibm.com"
-CP_NAMESPACE="cp4m"
-CP4MCM_CORE_STORAGECLASS="ibmc-block-gold"
+source 0-setup_env.sh
+
+#if [ -z ${ENTITLED_REGISTRY_KEY} ]; then echo "You must export the ENTITLED_REGISTRY_KEY environment variable prior to running."; exit; fi
+#ENTITLED_REGISTRY="cp.icr.io"
+#ENTITLED_REGISTRY_SECRET="ibm-management-pull-secret"
+#DOCKER_EMAIL="myemail@ibm.com"
+#CP_NAMESPACE="cp4m"
+#CP4MCM_CORE_STORAGECLASS="ibmc-block-gold"
+
+#CP4MCM_CORE_STORAGECLASS="ocs-storagecluster-ceph-rbd"
 
 #
 # Create Operator Namespace
@@ -41,6 +45,12 @@ spec:
 EOF
 
 #
+# Wait for CP4MCM CatalogSource to be created
+#
+echo "Waiting for CP4MCM CatalogSource (60 seconds)"
+sleep 60
+
+#
 # Create CP4MCM Subscription
 #
 cat << EOF | oc apply -f -
@@ -59,10 +69,10 @@ spec:
 EOF
 
 #
-# Wait for CatalogSource to be created
+# Wait for CP4MCM Subscription to be created
 #
-echo "Waiting for CatalogSource (30 seconds)"
-sleep 30
+echo "Waiting for CP4MCM Subscription (60 seconds)"
+sleep 60
 
 #
 # Create the Installation
@@ -174,3 +184,10 @@ spec:
       enabled: false
       name: techPreview
 EOF
+
+#
+# Wait for CP4MCM Subscription to be created
+#
+echo "Installation has started. Check status by running 'oc get opreq -A'"
+oc get opreq -A
+

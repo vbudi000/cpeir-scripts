@@ -1,3 +1,6 @@
+#!/bin/bash
+
+source 0-setup_env.sh
 
 #
 # Create Operator Namespace
@@ -24,8 +27,8 @@ EOF
 #
 # Wait for CatalogSource to be created
 #
-#echo Waiting for CatalogSource (30 seconds)
-#sleep 30
+echo "Waiting for CatalogSource (60 seconds)"
+sleep 60
 
 #
 # Create CS and ODLM Subscriptions.
@@ -37,7 +40,7 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: ibm-common-service-operator
-  namespace: common-service
+  namespace: openshift-operators
 spec:
   channel: stable-v1
   installPlanApproval: Automatic
@@ -46,17 +49,23 @@ spec:
   sourceNamespace: openshift-marketplace
 EOF
 
+#
+# Wait for CS Subscription to be created
+#
+echo "Waiting for CS Subscription (60 seconds)"
+sleep 60
+
 ## Create Subscription for odlm operator
-cat << EOF | oc apply -f -
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: operand-deployment-lifecycle-manager-app
-  namespace: openshift-operators
-spec:
-  channel: stable-v1
-  installPlanApproval: Automatic
-  name: operand-deployment-lifecycle-manager-app
-  source: opencloud-operators
-  sourceNamespace: openshift-marketplace
-EOF
+#cat << EOF | oc apply -f -
+#apiVersion: operators.coreos.com/v1alpha1
+#kind: Subscription
+##metadata:
+#  name: operand-deployment-lifecycle-manager-app
+#  namespace: openshift-operators
+#spec:
+#  channel: stable-v1
+#  installPlanApproval: Automatic
+#  name: operand-deployment-lifecycle-manager-app
+#  source: opencloud-operators
+##  sourceNamespace: openshift-marketplace
+#EOF

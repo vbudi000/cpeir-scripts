@@ -3,15 +3,15 @@
 
 #oc delete installations -n cp4m ibm-management
 
-oc get operandconfig -n ibm-common-services
+#oc get operandconfig -n ibm-common-services
 
-oc delete operandconfig common-service -n ibm-common-services
+#oc delete operandconfig common-service -n ibm-common-services
 
-oc get operandregistry -n ibm-common-services
+#oc get operandregistry -n ibm-common-services
 
-oc delete operandregistry common-service -n ibm-common-services
+#oc delete operandregistry common-service -n ibm-common-services
 
-oc delete project ibm-common-services
+#oc delete project ibm-common-services
 
 
 #
@@ -28,12 +28,11 @@ oc delete pvc -n ibm-common-services mongodbdir-icp-mongodb-1
 oc delete pvc -n ibm-common-services mongodbdir-icp-mongodb-2
 oc delete pvc -n ibm-common-services prometheus-ibm-monitoring-prometheus-db-prometheus-ibm-monitoring-prometheus-0
 
+oc delete operandconfig common-service -n ibm-common-services
+oc delete operandregistry common-service -n ibm-common-services
 #
 # Delete PVs
 #
-
-
-
 oc -n kube-system delete secret icp-metering-api-secret 
 oc -n kube-public delete configmap ibmcloud-cluster-info
 oc -n kube-public delete secret ibmcloud-cluster-ca-cert
@@ -50,4 +49,6 @@ oc delete ns management-infrastructure-grc-policies
 oc delete ns management-grc-policies
 oc delete ns cp4mcm
 
-./cp4mcm-cleanup-utility.sh --kubeconfigpath ./kubeconfig --mode postUninstallCleanup
+oc delete project ibm-common-services
+
+# ./cp4mcm-cleanup-utility.sh --kubeconfigpath ./kubeconfig --mode postUninstallCleanup
