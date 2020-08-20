@@ -2,24 +2,15 @@
 
 source 0-setup_env.sh
 
-#if [ -z ${ENTITLED_REGISTRY_KEY} ]; then echo "You must export the ENTITLED_REGISTRY_KEY environment variable prior to running."; exit; fi
-#ENTITLED_REGISTRY="cp.icr.io"
-#ENTITLED_REGISTRY_SECRET="ibm-management-pull-secret"
-#DOCKER_EMAIL="myemail@ibm.com"
-#CP_NAMESPACE="cp4m"
-#CP4MCM_CORE_STORAGECLASS="ibmc-block-gold"
-
-#CP4MCM_CORE_STORAGECLASS="ocs-storagecluster-ceph-rbd"
-
 #
 # Create Operator Namespace
 #
-oc new-project $CP_NAMESPACE
+oc new-project $CP4MCM_NAMESPACE
 
 #
 # Create entitled registry secret
 #
-oc create secret docker-registry $ENTITLED_REGISTRY_SECRET --docker-username=cp --docker-password=$ENTITLED_REGISTRY_KEY --docker-email=$DOCKER_EMAIL --docker-server=$ENTITLED_REGISTRY -n $CP_NAMESPACE
+oc create secret docker-registry $ENTITLED_REGISTRY_SECRET --docker-username=cp --docker-password=$ENTITLED_REGISTRY_KEY --docker-email=$DOCKER_EMAIL --docker-server=$ENTITLED_REGISTRY -n $CP4MCM_NAMESPACE
 
 #
 # Import Catalog Source
@@ -77,12 +68,13 @@ sleep 60
 #
 # Create the Installation
 #
+echo "Applying the CP4MCM 2.0 - Core Installation"
 cat << EOF | oc apply -f -
 apiVersion: orchestrator.management.ibm.com/v1alpha1
 kind: Installation
 metadata:
   name: ibm-management
-  namespace: cp4m
+  namespace: $CP4MCM_NAMESPACE
 spec:
   storageClass: $CP4MCM_CORE_STORAGECLASS
   imagePullSecret: $ENTITLED_REGISTRY_SECRET
@@ -189,5 +181,6 @@ EOF
 # Wait for CP4MCM Subscription to be created
 #
 echo "Installation has started. Check status by running 'oc get opreq -A'"
+sleep 10
 oc get opreq -A
 

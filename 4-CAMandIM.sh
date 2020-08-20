@@ -4,9 +4,6 @@
 
 source 0-setup_env.sh
 
-# CP4MCM_CAM_STORAGECLASS="ibmc-file-gold"
-#CP4MCM_CAM_STORAGECLASS="ocs-storagecluster-cephfs"
-
 #
 # Create management-infrastructure-management namespace.
 #

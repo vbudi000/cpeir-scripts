@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongo-troubleshoot-pod
+spec:
+  volumes:
+    - name: cam-mongo-pv
+      persistentVolumeClaim:
+      claimName: cam-mongo-pv
+  containers:
+    - name: mongo-troubleshoot
+      image: cp.icr.io/cp/cp4mcm/icam-mongo@sha256:dcc744c9eeae3968e38e3c8c1a2879f1987e0dfe0ab64ac58e0438a1d18a1db5
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/data/db"
+          name: cam-mongo-pv
