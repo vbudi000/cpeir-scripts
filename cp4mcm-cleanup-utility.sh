@@ -489,13 +489,14 @@ removeParticularCR() {
 
 checkIfInstallationInstanceExists(){
 
-    installation=`$ocOrKubectl get installations -A --kubeconfig="${pathToKubeconfig}" | awk '{ print $2 }'`
-    if [[ "${installation}" -ne "" ]]; then
-	echo "The CP4MCM installation instance still exists; it must be deleted before the postInstallCleanup steps can be performed" | tee -a "$logpath"
-	exit 1
+	installation=`$ocOrKubectl get installations.orchestrator.management.ibm.com --no-headers=true -A --kubeconfig="${pathToKubeconfig}" | awk '{ print $2 }'`
+    if [ -n "$installation" ]; 
+	then
+		echo "The CP4MCM installation instance still exists; it must be deleted before the postInstallCleanup steps can be performed" | tee -a "$logpath";
+		exit 1
     else
-	echo "No CP4MCM installation instance exists; proceeding"
-	return 0
+		echo "No CP4MCM installation instance exists; proceeding";
+		return 0
     fi
 }
 
@@ -565,10 +566,10 @@ deleteCRDs() {
 	"mcmcores.management.ibm.com"
 	"mcmsearches.management.ibm.com"
 	# odlm
-	#"operandrequests.operator.ibm.com"
-	#"operandconfigs.operator.ibm.com"
-	#"operandbindinfos.operator.ibm.com"
-	#"operandregistries.operator.ibm.com
+	"operandrequests.operator.ibm.com"
+	"operandconfigs.operator.ibm.com"
+	"operandbindinfos.operator.ibm.com"
+	"operandregistries.operator.ibm.com
     )
 
     local result=0

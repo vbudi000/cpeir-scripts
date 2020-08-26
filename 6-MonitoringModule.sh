@@ -5,8 +5,8 @@ source 0-setup_env.sh
 #
 # Updating Installation config with CAM config.
 #
-echo "Enabling Monitoring Mondule"
-oc patch installation.orchestrator.management.ibm.com ibm-management -n cp4m --type=json -p='[
+echo "Enabling Monitoring Module"
+oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_NAMESPACE --type=json -p='[
  {"op": "test",
   "path": "/spec/pakModules/1/name",
   "value": "monitoring" },
@@ -15,7 +15,9 @@ oc patch installation.orchestrator.management.ibm.com ibm-management -n cp4m --t
   "value": true }
 ]'
 
-
+#
+# Onboarding users.
+#
 YOUR_CP4MCM_ROUTE=`oc -n ibm-common-services get route cp-console --template '{{.spec.host}}'`
 CP_PASSWORD=`oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d`
 cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default

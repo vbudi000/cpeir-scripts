@@ -15,7 +15,7 @@ echo YOUR_IM_HTTPD_ROUTE = $YOUR_IM_HTTPD_ROUTE
 echo CP_PASSWORD = $CP_PASSWORD
 echo ENTITLED_REGISTRY_SECRET = $ENTITLED_REGISTRY_SECRET
 
-cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default
+cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n management-infrastructure-management
 
 #
 # Register IAM OAUTH client
@@ -184,5 +184,5 @@ EOF
 # Create links in the UI
 #
 echo "Applying navigation UI updates."
-./automation-navigation-updates.sh -p
+#./automation-navigation-updates.sh -p
 

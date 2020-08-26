@@ -52,3 +52,4 @@ oc delete ns cp4mcm
 oc delete project ibm-common-services
 
 # ./cp4mcm-cleanup-utility.sh --kubeconfigpath ./kubeconfig --mode postUninstallCleanup
+# ./cp4mcm-cleanup-utility.sh --kubeconfigpath ~/tmp/kubeconfig --mode postUninstallCleanup

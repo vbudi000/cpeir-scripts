@@ -39,7 +39,7 @@ EOF
 # Wait for CP4MCM CatalogSource to be created
 #
 echo "Waiting for CP4MCM CatalogSource (60 seconds)"
-sleep 60
+sleep 180
 
 #
 # Create CP4MCM Subscription
@@ -63,7 +63,7 @@ EOF
 # Wait for CP4MCM Subscription to be created
 #
 echo "Waiting for CP4MCM Subscription (60 seconds)"
-sleep 60
+sleep 180
 
 #
 # Create the Installation

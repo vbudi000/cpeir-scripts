@@ -32,7 +32,7 @@ export CAM_API_KEY=`cloudctl iam service-api-key-create ${serviceApiKeyName} ${s
 if [ $ROKS != "true" ]; 
 then 
 echo "Adding CAM Config to Installaton (CAM_API_KEY = $CAM_API_KEY)(ROKS = false)";
-oc patch installation.orchestrator.management.ibm.com ibm-management -n cp4m --type=json -p="[
+oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_NAMESPACE --type=json -p="[
  {"op": "test",
   "path": "/spec/pakModules/0/name",
   "value": "infrastructureManagement" },
@@ -55,7 +55,7 @@ else
 # Updating Installation config with CAM config with ROKS.
 #
 echo "Adding CAM Config to Installaton (CAM_API_KEY = $CAM_API_KEY)(ROKS = $ROKS)"
-oc patch installation.orchestrator.management.ibm.com ibm-management -n cp4m --type=json -p="[
+oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_NAMESPACE --type=json -p="[
  {"op": "test",
   "path": "/spec/pakModules/0/name",
   "value": "infrastructureManagement" },
@@ -80,8 +80,8 @@ fi
 #
 # Enable Infrastructure Management Module
 #
-echo "Enabling the IM Module in the  Installaton"
-oc patch installation.orchestrator.management.ibm.com ibm-management -n cp4m --type=json -p='[
+echo "Enabling the IM Module in the  Installation"
+oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_NAMESPACE --type=json -p='[
  {"op": "test",
   "path": "/spec/pakModules/0/name",
   "value": "infrastructureManagement" },

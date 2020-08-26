@@ -28,7 +28,7 @@ EOF
 # Wait for CatalogSource to be created
 #
 echo "Waiting for CatalogSource (60 seconds)"
-sleep 60
+sleep 180
 
 #
 # Create CS and ODLM Subscriptions.
@@ -53,5 +53,5 @@ EOF
 # Wait for CS Subscription to be created
 #
 echo "Waiting for CS Subscription (60 seconds)"
-sleep 60
+sleep 180
 echo "Done."
