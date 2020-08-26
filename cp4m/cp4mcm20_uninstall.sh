@@ -1,7 +1,9 @@
 
 
+# Delete the Installation resources first
+oc delete installations.orchestrator.management.ibm.com -n cp4m ibm-management
+sleep 300
 
-#oc delete installations -n cp4m ibm-management
 
 #oc get operandconfig -n ibm-common-services
 
@@ -12,7 +14,6 @@
 #oc delete operandregistry common-service -n ibm-common-services
 
 #oc delete project ibm-common-services
-
 
 #
 # Delete PVCs

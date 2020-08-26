@@ -15,7 +15,7 @@ echo YOUR_IM_HTTPD_ROUTE = $YOUR_IM_HTTPD_ROUTE
 echo CP_PASSWORD = $CP_PASSWORD
 echo ENTITLED_REGISTRY_SECRET = $ENTITLED_REGISTRY_SECRET
 
-cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n management-infrastructure-management
+cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n ibm-common-services
 
 #
 # Register IAM OAUTH client
@@ -63,7 +63,8 @@ oc create -f - <<EOF
 kind: Secret                                                                                                     
 apiVersion: v1                                                                                                   
 metadata:                                                                                                        
-  name: imconnectionsecret                                                                                           
+  name: imconnectionsecret   
+  namespace: management-infrastructure-management                                                                                        
 stringData:
   oidc.conf: |-                                                                                                  
     LoadModule          auth_openidc_module modules/mod_auth_openidc.so
