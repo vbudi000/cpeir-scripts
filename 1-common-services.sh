@@ -35,19 +35,19 @@ sleep 180
 # Note: This is only needed because out of the box they ship with the beta channel that doesn't work.
 #
 ## Create Subsciption for common service operator 
-cat << EOF | oc apply -f -
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: ibm-common-service-operator
-  namespace: openshift-operators
-spec:
-  channel: stable-v1
-  installPlanApproval: Automatic
-  name: ibm-common-service-operator
-  source: opencloud-operators
-  sourceNamespace: openshift-marketplace
-EOF
+#cat << EOF | oc apply -f -
+#apiVersion: operators.coreos.com/v1alpha1
+#kind: Subscription
+# metadata:
+#   name: ibm-common-service-operator
+#   namespace: openshift-operators
+# spec:
+#   channel: stable-v1
+#   installPlanApproval: Automatic
+#   name: ibm-common-service-operator
+#   source: opencloud-operators
+#   sourceNamespace: openshift-marketplace
+# EOF
 
 #
 # Wait for CS Subscription to be created
