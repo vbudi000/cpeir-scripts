@@ -185,5 +185,5 @@ EOF
 # Create links in the UI
 #
 echo "Applying navigation UI updates."
-#./automation-navigation-updates.sh -p
+./automation-navigation-updates.sh -p
 
