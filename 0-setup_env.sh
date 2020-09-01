@@ -25,16 +25,21 @@ ROKSZONE="dal13"
 # CP4MCM Parameters
 ###########################
 # ROKS defaults
-# CP4MCM_CORE_STORAGECLASS="ibmc-block-gold"
-# CP4MCM_CAM_STORAGECLASS="ibmc-file-gold-gid"
+# CP4MCM_BLOCK_STORAGECLASS="ibmc-block-gold"
+# CP4MCM_FILE_STORAGECLASS="ibmc-file-gold"
+# CP4MCM_FILE_GID_STORAGECLASS="ibmc-file-gold-gid"
 # 
 # OpenShift - OCS Defaults
-# CP4MCM_CORE_STORAGECLASS="ocs-storagecluster-ceph-rbd"
-# CP4MCM_CAM_STORAGECLASS="ocs-storagecluster-cephfs"
+# CP4MCM_BLOCK_STORAGECLASS="ocs-storagecluster-ceph-rbd"
+# CP4MCM_FILE_STORAGECLASS="ocs-storagecluster-cephfs"
+# CP4MCM_FILE_GID_STORAGECLASS="ocs-storagecluster-cephfs"
 
 CP4MCM_NAMESPACE="cp4m"
-CP4MCM_CORE_STORAGECLASS="ibmc-block-gold"
-CP4MCM_CAM_STORAGECLASS="ibmc-file-gold-gid"
+CP4MCM_BLOCK_STORAGECLASS="ibmc-block-gold"
+CP4MCM_FILE_STORAGECLASS="ibmc-file-gold"
+CP4MCM_FILE_GID_STORAGECLASS="ibmc-file-gold-gid"
+
+CP4MCM_CNMONITORING_REPO="docker.io/cruxdaemon"
 
 ###########################
 # CP4I Parameters

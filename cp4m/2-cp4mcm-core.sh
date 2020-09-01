@@ -76,7 +76,7 @@ metadata:
   name: ibm-management
   namespace: $CP4MCM_NAMESPACE
 spec:
-  storageClass: $CP4MCM_CORE_STORAGECLASS
+  storageClass: $CP4MCM_BLOCK_STORAGECLASS
   imagePullSecret: $ENTITLED_REGISTRY_SECRET
   license:
     accept: true

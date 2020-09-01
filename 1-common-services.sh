@@ -3,11 +3,8 @@
 source 0-setup_env.sh
 
 #
-# Create Operator Namespace
-#
-oc new-project common-service
-
 # Common Services CatalogSource
+#
 oc create -f - <<EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
@@ -28,30 +25,5 @@ EOF
 # Wait for CatalogSource to be created
 #
 echo "Waiting for CatalogSource (60 seconds)"
-sleep 180
-
-#
-# Create CS and ODLM Subscriptions.
-# Note: This is only needed because out of the box they ship with the beta channel that doesn't work.
-#
-## Create Subsciption for common service operator 
-#cat << EOF | oc apply -f -
-#apiVersion: operators.coreos.com/v1alpha1
-#kind: Subscription
-# metadata:
-#   name: ibm-common-service-operator
-#   namespace: openshift-operators
-# spec:
-#   channel: stable-v1
-#   installPlanApproval: Automatic
-#   name: ibm-common-service-operator
-#   source: opencloud-operators
-#   sourceNamespace: openshift-marketplace
-# EOF
-
-#
-# Wait for CS Subscription to be created
-#
-echo "Waiting for CS Subscription (60 seconds)"
 sleep 180
 echo "Done."
