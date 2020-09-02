@@ -16,3 +16,7 @@ script:
 #     docker tag motdnode johnowebb/motdnode;
 #     docker push johnowebb/motdnode;
 #     fi
+
+after_script:
+  - docker stop mcminstall
+  - docker rm mcminstall
