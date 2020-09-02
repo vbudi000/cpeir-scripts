@@ -1,0 +1,15 @@
+{
+  "name": "cp4mcm_20",
+  "version": "1.0.0",
+  "description": "Installation assets for CP4MCM 2.0",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.ibm.com:Andrew-Nguyen/CP4MCM_20.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
