@@ -3,19 +3,19 @@ language: node_js
 services:
   - docker
 
-#before_install:
 install:
   - docker build -t mcminstall .
   - docker run -d -p 127.0.0.1:8090:8090 --name mcminstall mcminstall
 
 script:
   - docker ps | grep -q mcminstall
-# after_success:
-#   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-#     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-#     docker tag motdnode johnowebb/motdnode;
-#     docker push johnowebb/motdnode;
-#     fi
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker tag cp4mcm andrewnhan1/cp4mcm;
+    docker push andrewnhan1/cp4mcm;
+    fi
 
 after_script:
   - docker stop mcminstall

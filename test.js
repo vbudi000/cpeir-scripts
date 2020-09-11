@@ -3,15 +3,23 @@ const http = require("http");
 const shell = require("shelljs");
 const express = require("express");
 const Router = require("express-promise-router");
+const bodyParser = require("body-parser");
 
 const app = express();
 const PORT = 8090;
 const cloudPakRouter = new Router();
 
-cloudPakRouter.get("/set-environment", async (req, res) => {
-  shell.exec("/usr/src/CP4MCM_20/0-setup_env.sh");
-  shell.exec("printenv");
-  res.status(200).send("Environment set.");
+app.use(bodyParser.json({ limit: "10mb", extended: true }));
+
+cloudPakRouter.get("/create-mcmcore", async (req, res) => {
+  const { ppaKey, ocToken, clusterApiAddress } = req.body;
+  const loginCommand = "oc login";
+  const loginCommand2 = loginCommand.concat(` --token=${ocToken}`);
+  const loginCommand3 = loginCommand2.concat(` --server=${clusterApiAddress}`);
+  res.status(200).send("MCM core creation in progress...");
+  shell.exec(loginCommand3);
+  shell.env["ENTITLED_REGISTRY_KEY"] = ppaKey;
+  shell.exec("make -C /usr/src/CP4MCM_20 mcmcore");
 });
 
 // Listen on port 8000, IP defaults to 127.0.0.1
