@@ -41,6 +41,11 @@ CP4MCM_FILE_GID_STORAGECLASS="ibmc-file-gold-gid"
 
 CP4MCM_CNMONITORING_REPO="docker.io/cruxdaemon"
 
+# Additional packages can be found here: 
+ANSIBLE_SETUP_PACKAGE="ansible-tower-openshift-setup-3.7.2-1.tar.gz"
+ANSIBLE_NAMESPACE="ansible-tower"
+ANSIBLE_PASSWORD="Passw0rd"
+
 ###########################
 # CP4I Parameters
 ###########################
