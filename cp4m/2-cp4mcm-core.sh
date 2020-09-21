@@ -182,5 +182,5 @@ EOF
 #
 echo "Installation has started. Check status by running 'oc get opreq -A'"
 sleep 10
-oc get opreq -A
+oc get opreq --all-namespaces
 

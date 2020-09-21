@@ -5,6 +5,7 @@ COPY . ./
 
 # Install prerequisities for Ansible
 RUN apt-get update
+RUN apt-get -y install build-essential
 RUN apt-get -y install python3 python3-nacl python3-pip libffi-dev
 
 FROM osinstall as ansibleinstall
@@ -22,22 +23,8 @@ RUN tar -xzf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz
 RUN mv ./openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/local/bin
 RUN mv ./openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/kubectl /usr/local/bin
 
-FROM ansibleinstall as nodeinstall
-#install node
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
-RUN apt-get install -y nodejs
-
-
-# confirm that it was successful 
-RUN node -v
-RUN npm -v
-
-# install node modules
-RUN mkdir node_modules
-RUN mv /usr/src/CP4MCM_20/node_modules /usr/src/CP4MCM_20/node_modules.tmp && mv /usr/src/CP4MCM_20/node_modules.tmp /usr/src/CP4MCM_20/node_modules && npm install --save express express-promise-router shelljs body-parser
-
+FROM ansibleinstall as scriptinstall
 # permissions for the bash scripts
 RUN find /usr/src/CP4MCM_20 -type f -iname "*.sh" -exec chmod +x {} \;
 
-EXPOSE 8090
-CMD node test.js
+CMD ./0-setup_env.sh && make mcmall
