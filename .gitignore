@@ -1,2 +1,6 @@
-registration.json
-node_modules
+
+
+setup_container_cluster*
+kubeconfig
+
+tmp*

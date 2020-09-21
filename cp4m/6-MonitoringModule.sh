@@ -68,12 +68,12 @@ sleep 900
 #
 # Onboarding users.
 #
-cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default
+# cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default
 
-cloudctl iam user-import --user bob -f
-cloudctl iam user-import --user tom -f
-cloudctl iam user-onboard id-mycluster-account -r PRIMARY_OWNER -u bob
-cloudctl iam user-onboard id-mycluster-account -r MEMBER -u tom
+# cloudctl iam user-import --user bob -f
+# cloudctl iam user-import --user tom -f
+# cloudctl iam user-onboard id-mycluster-account -r PRIMARY_OWNER -u bob
+# cloudctl iam user-onboard id-mycluster-account -r MEMBER -u tom
 
 #
 # Patching the CNMonitoring deployable secret.
