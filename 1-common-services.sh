@@ -2,8 +2,6 @@
 
 source 0-setup_env.sh
 
-oc login --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/token
-
 #
 # Common Services CatalogSource
 #
