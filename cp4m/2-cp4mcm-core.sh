@@ -185,7 +185,5 @@ progress-bar 180
 
 status
 cscred
-echo "Installation has started. Check status by running 'oc get opreq -A'"
-sleep 10
-oc get opreq --all-namespaces
+
 
