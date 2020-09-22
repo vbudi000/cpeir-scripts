@@ -1,17 +1,18 @@
 #!/bin/bash
 
+source 0-setup_env.sh
+
 #
 # Start of the real brainiac work unlike what the simpleton was doing before boy genius jumped in to save the day
 #
-
 if [ -z ${ENTITLED_REGISTRY_KEY} ]; then echo "You must export the ENTITLED_REGISTRY_KEY environment variable prior to running."; exit; fi
 ENTITLED_REGISTRY="cp.icr.io"
 ENTITLED_REGISTRY_SECRET="ibm-entitlement-key"
 DOCKER_EMAIL="myemail@ibm.com"
-CP_NAMESPACE="cp4i"
-CP4I_BLOCK_STORAGECLASS="ocs-storagecluster-ceph-rbd"
-CP4I_FILE_STORAGECLASS="ocs-storagecluster-cephfs"
-CP4I_FILE_GID_STORAGECLASS="ocs-storagecluster-cephfs"
+#CP_NAMESPACE="cp4i"
+#CP4I_BLOCK_STORAGECLASS="ocs-storagecluster-ceph-rbd"
+#CP4I_FILE_STORAGECLASS="ocs-storagecluster-cephfs"
+#CP4I_FILE_GID_STORAGECLASS="ocs-storagecluster-cephfs"
 
 #
 # Create Operator Namespace
@@ -89,20 +90,20 @@ EOF
 # Create the Installation of the Asset Repo for Sandpit
 # For Prod instance remove the replicas 1
 #
-cat << EOF | oc apply -f -
-apiVersion: integration.ibm.com/v1beta1
-kind: AssetRepository
-spec:
-  license:
-    accept: true
-  replicas: 1
-  storage:
-    assetDataVolume:
-      class: $CP4I_FILE_GID_STORAGECLASS
-    couchVolume:
-      class: $CP4I_BLOCK_STORAGECLASS
-  version: 2020.2.1.1-0
-metadata:
-  name: asset-repo
-  namespace: $CP_NAMESPACE
-EOF
+# cat << EOF | oc apply -f -
+# apiVersion: integration.ibm.com/v1beta1
+# kind: AssetRepository
+# spec:
+#   license:
+#     accept: true
+#   replicas: 1
+#   storage:
+#     assetDataVolume:
+#       class: $CP4I_FILE_GID_STORAGECLASS
+#     couchVolume:
+#       class: $CP4I_BLOCK_STORAGECLASS
+#   version: 2020.2.1.1-0
+# metadata:
+#   name: asset-repo
+#   namespace: $CP_NAMESPACE
+# EOF

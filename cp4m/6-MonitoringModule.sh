@@ -8,7 +8,7 @@ CP_PASSWORD=`oc -n ibm-common-services get secret platform-auth-idp-credentials 
 #
 # Adding Monitoring Storage Config.
 #
-echo "Adding Monitoring Storage Config to Installaton"
+log "Adding Monitoring Storage Config to Installation"
 oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_NAMESPACE --type=json -p="[
  {"op": "test",
   "path": "/spec/pakModules/1/name",
@@ -52,7 +52,7 @@ oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_
 #
 # Updating Installation config with CAM config.
 #
-echo "Enabling Monitoring Module"
+log "Enabling Monitoring Module"
 oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_NAMESPACE --type=json -p='[
  {"op": "test",
   "path": "/spec/pakModules/1/name",
@@ -62,33 +62,16 @@ oc patch installation.orchestrator.management.ibm.com ibm-management -n $CP4MCM_
   "value": true }
 ]'
 
-echo "Sleeping until install starts."
-sleep 900
+log "Sleeping until install starts. (180 seconds)"
+progress-bar 180
+status
 
-#
-# Onboarding users.
-#
-# cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n default
-
-# cloudctl iam user-import --user bob -f
-# cloudctl iam user-import --user tom -f
-# cloudctl iam user-onboard id-mycluster-account -r PRIMARY_OWNER -u bob
-# cloudctl iam user-onboard id-mycluster-account -r MEMBER -u tom
 
 #
 # Patching the CNMonitoring deployable secret.
 #
-echo "Docker config for SECRET=$ENTITLED_REGISTRY_SECRET in NAMESPACE=$CP4MCM_NAMESPACE"
+log "Docker config for SECRET=$ENTITLED_REGISTRY_SECRET in NAMESPACE=$CP4MCM_NAMESPACE"
 ENTITLED_REGISTRY_DOCKERCONFIG=`oc get secret $ENTITLED_REGISTRY_SECRET -n $CP4MCM_NAMESPACE -o jsonpath='{.data.\.dockerconfigjson}'`
-echo "ENTITLED_REGISTRY_DOCKERCONFIG=$ENTITLED_REGISTRY_DOCKERCONFIG"
-oc patch deployable.app.ibm.com/cnmon-pullsecret-deployable -p `echo {\"spec\":{\"template\":{\"data\":{\".dockerconfigjson\":\"$ENTITLED_REGISTRY_DOCKERCONFIG\"}}}}` --type merge -n management-monitoring
-
-#
-# Check CN Monitoring Deployables
-#
-oc get deployable.app.ibm.com -n management-monitoring
-oc get channel.app.ibm.com -n management-monitoring cnmon-chl
-oc get subscription.app.ibm.com -n management-monitoring cnmon-sub
-oc get placementrule.app.ibm.com -n management-monitoring cnmon-pr
-oc get monitoringdeploy $(oc get monitoringdeploy -n management-monitoring --no-headers | awk '{print $1}') -n management-monitoring -o yaml | grep 'helmRepo\|dockerReg'
+log "ENTITLED_REGISTRY_DOCKERCONFIG=$ENTITLED_REGISTRY_DOCKERCONFIG"
+execlog oc patch deployable.app.ibm.com/cnmon-pullsecret-deployable -p `echo {\"spec\":{\"template\":{\"data\":{\".dockerconfigjson\":\"$ENTITLED_REGISTRY_DOCKERCONFIG\"}}}}` --type merge -n management-monitoring
 

@@ -8,19 +8,19 @@ YOUR_CP4MCM_ROUTE=`oc -n ibm-common-services get route cp-console --template '{{
 YOUR_IM_HTTPD_ROUTE=`echo $YOUR_CP4MCM_ROUTE |sed s/cp-console/inframgmtinstall/`
 CP_PASSWORD=`oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d`
 
-echo YOUR_CLIENT_ID = $YOUR_CLIENT_ID
-echo YOUR_CLIENT_SECRET = $YOUR_CLIENT_SECRET
-echo YOUR_CP4MCM_ROUTE = $YOUR_CP4MCM_ROUTE
-echo YOUR_IM_HTTPD_ROUTE = $YOUR_IM_HTTPD_ROUTE
-echo CP_PASSWORD = $CP_PASSWORD
-echo ENTITLED_REGISTRY_SECRET = $ENTITLED_REGISTRY_SECRET
+log YOUR_CLIENT_ID = $YOUR_CLIENT_ID
+log YOUR_CLIENT_SECRET = $YOUR_CLIENT_SECRET
+log YOUR_CP4MCM_ROUTE = $YOUR_CP4MCM_ROUTE
+log YOUR_IM_HTTPD_ROUTE = $YOUR_IM_HTTPD_ROUTE
+log CP_PASSWORD = $CP_PASSWORD
+log ENTITLED_REGISTRY_SECRET = $ENTITLED_REGISTRY_SECRET
 
-cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n ibm-common-services
+execlog cloudctl login -a $YOUR_CP4MCM_ROUTE --skip-ssl-validation -u admin -p $CP_PASSWORD -n ibm-common-services
 
 #
 # Register IAM OAUTH client
 #
-echo "Registering IAM OAUTH client."
+log "Registering IAM OAUTH client."
 cat << EOF > registration.json
 {
     "token_endpoint_auth_method": "client_secret_basic",
@@ -53,12 +53,13 @@ cat << EOF > registration.json
     "redirect_uris": ["https://$YOUR_CP4MCM_ROUTE/auth/liberty/callback", "https://$YOUR_IM_HTTPD_ROUTE/oidc_login/redirect_uri"]
 }
 EOF
-cloudctl iam oauth-client-register -f registration.json
+
+execlog cloudctl iam oauth-client-register -f registration.json
 
 #
 # Create imconnectionsecret
 #
-echo "Creating imconnectionsecret."
+log "Creating imconnectionsecret."
 oc create -f - <<EOF
 kind: Secret                                                                                                     
 apiVersion: v1                                                                                                   
@@ -133,7 +134,7 @@ EOF
 #
 # Create IMInstall
 #
-echo "Creating CloudForms IMInstall"
+log "Creating CloudForms IMInstall"
 oc create -f - <<EOF
 apiVersion: infra.management.ibm.com/v1alpha1
 kind: IMInstall
@@ -159,9 +160,9 @@ EOF
 #
 # Wait for IM
 #
-echo "Sleeping for 30 seconds."
-sleep 30
-echo "Creating IM Connection Resource"
+log "Sleeping for 30 seconds."
+progress-bar 30
+log "Creating IM Connection Resource"
 
 #
 # Create Connection
@@ -180,10 +181,18 @@ oc create -f - <<EOF
    cfHost: web-service.management-infrastructure-management.svc.cluster.local:3000
 EOF
 
+#
+# Wait for install
+#
+log "Waiting for installation to start. (180 seconds)"
+progress-bar 180
+status
 
 #
 # Create links in the UI
 #
-echo "Applying navigation UI updates."
+log "Applying navigation UI updates."
 ./cp4m/automation-navigation-updates.sh -p
+
+
 

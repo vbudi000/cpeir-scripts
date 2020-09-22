@@ -38,8 +38,8 @@ EOF
 #
 # Wait for CP4MCM CatalogSource to be created
 #
-echo "Waiting for CP4MCM CatalogSource (60 seconds)"
-sleep 180
+log "Waiting for CP4MCM CatalogSource (180 seconds)"
+progress-bar 180
 
 #
 # Create CP4MCM Subscription
@@ -62,13 +62,13 @@ EOF
 #
 # Wait for CP4MCM Subscription to be created
 #
-echo "Waiting for CP4MCM Subscription (60 seconds)"
-sleep 180
+log "Waiting for CP4MCM Subscription (180 seconds)"
+progress-bar 180
 
 #
 # Create the Installation
 #
-echo "Applying the CP4MCM 2.0 - Core Installation"
+log "Applying the CP4MCM 2.0 - Core Installation"
 cat << EOF | oc apply -f -
 apiVersion: orchestrator.management.ibm.com/v1alpha1
 kind: Installation
@@ -180,7 +180,9 @@ EOF
 #
 # Wait for CP4MCM Subscription to be created
 #
-echo "Installation has started. Check status by running 'oc get opreq -A'"
-sleep 10
-oc get opreq -A
+log "Waiting for Installation to start. (180 seconds)"
+progress-bar 180
+
+status
+cscred
 

@@ -24,6 +24,5 @@ EOF
 #
 # Wait for CatalogSource to be created
 #
-echo "Waiting for CatalogSource (60 seconds)"
-sleep 180
-echo "Done."
+log "Waiting for CatalogSource (180 seconds)"
+progress-bar 180

@@ -4,3 +4,4 @@ setup_container_cluster*
 kubeconfig
 
 tmp*
+*orig.yaml
